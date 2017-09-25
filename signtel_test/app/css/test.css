@@ -1,0 +1,32 @@
+div#container {
+  margin: auto;
+  margin-top: 200px;
+  margin-bottom: 200px;
+  width: 60%;
+  
+  border: 1px solid #afd7e3;
+  padding: 10px; }
+  div#container .myProgress {
+    width: 60%;
+    margin: auto;
+    overflow: hidden;
+    margin-top: 20px;
+	position:relative;
+    background-color: #ddd; }
+    div#container .myProgress .myBar {
+      width: 1%;
+      height: 30px;
+      background-color: #afd7e3; }
+    div#container .myProgress .err {
+      background: red; }
+  div#container #footer {
+    height: 30px;
+    margin: auto;
+    text-align: center;
+    margin-top: 20px; }
+    div#container #footer button {
+      border: 1px solid black;
+      background: grey;
+      margin-left: 5px; }
+    div#container #footer button:focus {
+      outline: 0; }

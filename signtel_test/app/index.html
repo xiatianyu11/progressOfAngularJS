@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<script src="js/angular.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/test.css">
+<body ng-app="myApp">
+
+<div id="container" ng-controller="myCtrl">
+
+   <div class="myProgress" ng-repeat="bar in data.bars track by $index">
+      <div id="bar{{$index}}" class="myBar" ng-class="{'err': isInvalid($index)}" ng-style="{width: getBarWidth($index, bar) + '%'}" >
+        
+      </div>
+	  <div style="position:absolute; left: 200px; top: 6px;">{{ barWidth[$index] }}%</div>
+   </div>
+
+   <div id="footer" >
+      <select ng-model="selectedIndex" ng-init="selectedIndex = 0" >
+       <option ng-repeat="d in data.bars track by $index" ng-value="$index"  ng-selected="selectedIndex == $index" >
+          #progress{{$index}}
+       </option>
+      </select>
+	  
+	  
+      <button type="button" ng-repeat="item in data.buttons track by $index" ng-click="setBarWidth(item)">
+         {{item}}
+      </button>
+   </div>
+
+</div>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+  $http.get("http://pb-api.herokuapp.com/bars")
+  .then(function(response) {
+      $scope.data = response.data;
+      console.log($scope.data);
+  });
+
+  $scope.barWidth = [];
+  $scope.getBarWidth = function(index, width){
+      if( $scope.barWidth[index] <= 0 ){
+          return 0;
+      }else if(!!!$scope.barWidth[index] ){
+         $scope.barWidth[index] = width;
+         return width;
+      }else{
+         return $scope.barWidth[index];
+      }
+  }
+
+  $scope.isInvalid = function(index){
+      if(!!$scope.barWidth[index] && $scope.barWidth[index] > 100){
+         return true;
+      }else{
+         return false;
+      }
+  }
+
+  $scope.setBarWidth = function(width){
+      var index = $scope.selectedIndex;
+      if( $scope.barWidth[index] != 0 && !!!$scope.barWidth[index] ){
+          $scope.barWidth[index] = width;
+      }else{
+
+         if($scope.barWidth[index] + width < 0){
+            $scope.barWidth[index] = 0;
+         }else if($scope.barWidth[index] + width > $scope.data.limit){
+            $scope.barWidth[index] = $scope.data.limit;
+         }else{
+            $scope.barWidth[index] = $scope.barWidth[index] + width;
+         }
+      }
+  }
+
+  $scope.selectedIndex = 0;
+
+
+});
+</script>
+
+</body>
+</html>
